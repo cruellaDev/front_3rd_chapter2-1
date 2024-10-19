@@ -85,6 +85,26 @@ const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     return () => clearInterval(luckyTimer);
   }, []);
 
+  useEffect(() => {
+    const suggestionTimer = setInterval(() => {
+      setProducts(prevProducts => {
+        const availableProducts = prevProducts.filter(p => p.stock > 0);
+        if (availableProducts.length > 0) {
+          const suggestionItem = availableProducts[Math.floor(Math.random() * availableProducts.length)];
+          alert(`${suggestionItem.name}은(는) 어떠세요? 지금 구매하시면 ${CONSTANTS.DISCOUNT_RATE_EXTRA_SUGGESTION * 100}% 추가 할인!`);
+          return prevProducts.map(p =>
+            p.id === suggestionItem.id
+              ? { ...p, price: Math.round(p.price * (1 - CONSTANTS.DISCOUNT_RATE_EXTRA_SUGGESTION)) }
+              : p
+          );
+        }
+        return prevProducts;
+      });
+    }, CONSTANTS.TIME_INTERVAL_EXTRA_SUGGESTION * CONSTANTS.MILLISECONDS);
+
+    return () => clearInterval(suggestionTimer);
+  }, []);
+
   return (
     <ProductContext.Provider value={{ products, updateProductStock }}>
       {children}
