@@ -226,6 +226,10 @@ const ProductSelect: React.FC = () => {
   const { addToCart } = useCart();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
 
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProductId(event.target.value);
+  };
+
   const handleAddToCart = useCallback(() => {
     if (selectedProductId) {
       const product = products.find(p => p.id === selectedProductId);
@@ -244,7 +248,7 @@ const ProductSelect: React.FC = () => {
         id="product-select"
         className="border rounded p-2"
         value={selectedProductId}
-        onChange={(e) => setSelectedProductId(e.target.value)}
+        onChange={handleSelectChange}
       >
         <option value="">상품을 선택하세요</option>
         {products.map((product) => (
